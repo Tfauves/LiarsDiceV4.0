@@ -50,7 +50,16 @@ public class Game {
         for (Player activePlayer : playerList) {
             System.out.println(activePlayer.playerName + "'s turn");
             System.out.println("Your hand is " + activePlayer.cup.displayHand());
+            bid();
         }
+    }
+
+    public void bid() {
+        System.out.println("Enter a qty: ");
+        currentBidQty = scanner.nextInt();
+        System.out.println("Enter a die face value: ");
+        getCurrentBidDiceFaceValue = scanner.nextInt();
+        scanner.nextLine();
     }
 
 
