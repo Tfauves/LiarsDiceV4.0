@@ -56,27 +56,43 @@ public class Game {
         for (Player activePlayer : playerList) {
             System.out.println(activePlayer.playerName + "'s turn");
             System.out.println("Your hand is " + activePlayer.cup.displayHand());
-            if (isStartingPlayer)
-            bid(activePlayer);
+            if (isStartingPlayer) {
+                roundOpenBid();
+                isStartingPlayer = false;
+            } else {
+                bid(activePlayer);
+                validateBid(currentBidQty, currentBidDiceFaceValue);
+            }
 
-            spaces();
-            System.out.println(activePlayer.playerName + "'s bid " + previousBidDieQty + "x " + previousBidDieFaceValue);
-            System.out.println();
+        System.out.println(activePlayer.playerName + "'s bid " + currentBidQty + "x " + currentBidDiceFaceValue);
+        System.out.println();
 
-//
-//            validateBid(currentBidQty, currentBidDiceFaceValue);
+
+        }
+    }
+
+    public void roundOpenBid() {
+        System.out.println("Make your bid.");
+        System.out.println("Enter die qty: ");
+        currentBidQty = scanner.nextInt();
+        System.out.println("Enter die face value: ");
+        currentBidDiceFaceValue = scanner.nextInt();
+        scanner.nextLine();
+        if (currentBidQty == 0 || currentBidDiceFaceValue == 0) {
+            System.out.println("Invaild Bid!, try again...");
+            isStartingPlayer = true;
         }
     }
 
     public void bid(Player activePlayer) {
+        previousBidDieQty = currentBidQty;
+        previousBidDieFaceValue = currentBidDiceFaceValue;
         System.out.println("Make your bid!");
         System.out.println("Enter a qty: ");
         currentBidQty = scanner.nextInt();
         System.out.println("Enter a die face value: ");
         currentBidDiceFaceValue = scanner.nextInt();
         scanner.nextLine();
-        previousBidDieQty = currentBidQty;
-        previousBidDieFaceValue = currentBidDiceFaceValue;
     }
 
 //    Bid must have a qty and a face value.
@@ -85,31 +101,29 @@ public class Game {
 //    If the faceValue of the bid is equal to the faceValue of the previous bid. The qty must be greater.
 
     public void validateBid(int currentBidQty, int currentBidDiceFaceValue) {
-//       if (isStartingPlayer) {
-//           do {
-//               bid();
-//           } while (currentBidQty == 0 || currentBidDiceFaceValue == 0);
-//           System.out.println("Invalid Bid!");
-//       }
 
-//        if (currentBidQty == 0 || currentBidDiceFaceValue == 0) {
-//            System.out.println("Invalid Bid!");
-//            bid();
-//        } else if (currentBidQty == previousBidDieQty && currentBidDiceFaceValue == previousBidDieFaceValue) {
-//            System.out.println("Invalid Bid!");
-//            bid();
-//        }
-//
-//        if (currentBidDiceFaceValue > previousBidDieFaceValue) {
-//            System.out.println("Valid Bid...");
-//            isValidBid = true;
-//        } else if (currentBidDiceFaceValue == previousBidDieFaceValue && currentBidQty > previousBidDieQty) {
-//            System.out.println("Valid Bid...");
-//            isValidBid = true;
-//        } else {
-//            System.out.println("Invalid Bid");
-//            bid();
-//        }
+        if (currentBidQty == 0 || currentBidDiceFaceValue == 0) {
+            System.out.println("Invalid Bid!");
+           turn();
+        } else if (currentBidQty == previousBidDieQty && currentBidDiceFaceValue == previousBidDieFaceValue) {
+            System.out.println("Invalid Bid!");
+            turn();
+        }
+
+        if (currentBidDiceFaceValue > previousBidDieFaceValue) {
+            System.out.println("Valid Bid...");
+            spaces();
+            System.out.println();
+            isValidBid = true;
+        } else if (currentBidDiceFaceValue == previousBidDieFaceValue && currentBidQty > previousBidDieQty) {
+            System.out.println("Valid Bid...");
+            spaces();
+            System.out.println();
+            isValidBid = true;
+        } else {
+            System.out.println("Invalid Bid");
+            turn();
+        }
     }
 
     public void spaces() {
