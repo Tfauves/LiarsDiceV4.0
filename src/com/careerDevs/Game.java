@@ -12,10 +12,13 @@ public class Game {
     public int previousBidDieFaceValue;
     public int currentBidQty;
     public int currentBidDiceFaceValue;
+    public int checkBidQty;
+    public int checkBidDiceFaceValue;
     public boolean isActiveGame = false;
     public boolean isValidBid = false;
     public boolean isStartingPlayer = true;
     public boolean isActiveRound = false;
+    public boolean isLieCalled = false;
 
     public Game() {
         System.out.println("Enter number of players: ");
@@ -38,7 +41,7 @@ public class Game {
             setDiceOneTable(activePlayer.cup.dice);
 
         }
-        System.out.println(diceOnTable);
+        //System.out.println(diceOnTable);
     }
 
     public void setDiceOneTable(List<Die> dice) {
@@ -59,28 +62,29 @@ public class Game {
             if (isStartingPlayer) {
                 roundOpenBid();
                 if (isValidBid) {
-                    System.out.println("Valid Bid...");
+                    spaces();
+                    System.out.println("Valid Bid1...");
                 } else {
-                    System.out.println("Invalid Bid!!!");
+                    System.out.println("Invalid Bid1!!!");
                     turn();
                 }
                 isStartingPlayer = false;
                 isValidBid = false;
-            spaces();
             } else {
                 bid(activePlayer);
-                validateBid(currentBidQty, currentBidDiceFaceValue);
+                validateBid(checkBidQty, checkBidDiceFaceValue);
                 if (isValidBid) {
-                    System.out.println("Valid Bid...");
+                    currentBidQty = checkBidQty;
+                    currentBidDiceFaceValue = checkBidDiceFaceValue;
+                    spaces();
+                    System.out.println("Valid Bid2...");
                 } else {
-                    System.out.println("Invalid Bid!!!");
+                    System.out.println("Invalid Bid2!!!");
                     System.out.println(" The previous bid was " + previousBidDieQty + "x " + previousBidDieFaceValue + " try again.");
-                    bid(activePlayer);
+                   turn();
                 }
-               // validateBid(currentBidQty, currentBidDiceFaceValue);
             }
-            System.out.println(activePlayer.playerName + "'s bid " + currentBidQty + "x " + currentBidDiceFaceValue);
-            System.out.println();
+            System.out.println(activePlayer.playerName + "'s bid " + currentBidQty + "x " + currentBidDiceFaceValue + "'s");
         }
     }
 
@@ -97,12 +101,15 @@ public class Game {
     public void bid(Player activePlayer) {
         previousBidDieQty = currentBidQty;
         previousBidDieFaceValue = currentBidDiceFaceValue;
+        //System.out.println("Type (b) to bid of (l) to call liar.");
+        //String bidOrCall = scanner.nextLine();
         System.out.println("Make your bid!");
         System.out.println("Enter a qty: ");
-        currentBidQty = scanner.nextInt();
+        checkBidQty = scanner.nextInt();
         System.out.println("Enter a die face value: ");
-        currentBidDiceFaceValue = scanner.nextInt();
+        checkBidDiceFaceValue = scanner.nextInt();
         scanner.nextLine();
+
     }
 
 //    Bid must have a qty and a face value.
@@ -110,18 +117,22 @@ public class Game {
 //    Qty of the bid can equal, be less than, or greater than previous as long as the faceValue is greater.
 //    If the faceValue of the bid is equal to the faceValue of the previous bid. The qty must be greater.
 
-    public void validateBid(int currentBidQty, int currentBidDiceFaceValue) {
-
-        if (currentBidQty == 0 || currentBidDiceFaceValue == 0) {
+    public void validateBid(int checkBidQty, int checkBidDiceFaceValue) {
+        if (checkBidQty == 0 || checkBidDiceFaceValue == 0) {
             isValidBid = false;
 
-        } else if (currentBidQty == previousBidDieQty && currentBidDiceFaceValue == previousBidDieFaceValue) {
+        } else if (checkBidQty == previousBidDieQty && checkBidDiceFaceValue == previousBidDieFaceValue) {
             isValidBid = false;
 
         }
-        if (currentBidDiceFaceValue > previousBidDieFaceValue) {
+        if (checkBidDiceFaceValue > previousBidDieFaceValue) {
             isValidBid = true;
-        } else isValidBid = currentBidDiceFaceValue == previousBidDieFaceValue && currentBidQty > previousBidDieQty;
+
+        } else if (checkBidDiceFaceValue == previousBidDieFaceValue && checkBidQty > previousBidDieQty) {
+            isValidBid = true;
+        } else {
+            isValidBid = false;
+        }
     }
 
     public void spaces() {
